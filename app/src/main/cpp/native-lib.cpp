@@ -8,8 +8,8 @@ JNIEXPORT jstring JNICALL
 Java_com_consciousapps_cmakecurltest_MainActivity_stringFromJNI(
         JNIEnv *env,
         jobject /* this */) {
-    const char *response = loginApi();
-    return env->NewStringUTF(response);
+    std::string response = loginApi();
+    return env->NewStringUTF(response.c_str());
 }
 
 
@@ -18,7 +18,7 @@ static size_t WriteCallback(void *contents, size_t size, size_t nmemb, void *use
     return size * nmemb;
 }
 
-const char *loginApi() {
+std::string loginApi() {
 
     std::string readBuffer;
 
@@ -30,7 +30,7 @@ const char *loginApi() {
     curl = curl_easy_init();
 
     if (curl) {
-        curl_easy_setopt(curl, CURLOPT_URL, "https://www.google.com");
+        curl_easy_setopt(curl, CURLOPT_URL, "http://restcountries.eu/rest/v2/all");
         curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback);
         curl_easy_setopt(curl, CURLOPT_WRITEDATA, &readBuffer);
 
@@ -46,5 +46,5 @@ const char *loginApi() {
     curl_global_cleanup();
 
 
-    return readBuffer.c_str();
+    return readBuffer;
 }
